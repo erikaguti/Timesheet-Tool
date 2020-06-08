@@ -9,7 +9,7 @@ for file in os.listdir(os.getcwd()):
         modified.append(os.stat(file).st_mtime)
 for file in os.listdir(os.getcwd()):    
     if os.stat(file).st_mtime == max(modified):
-        raw = pd.read_csv(file)
+        raw = pd.read_csv(file, encoding = 'latin1')
 
 time = raw[['Subject', 'Start Date','Start Time', 'End Time', 'Description']]
 
@@ -26,6 +26,7 @@ for index, row in time.iterrows():
 time['Hours Worked'] = Hours
 
 clean = time[['Weekday','Subject','Hours Worked', 'Description']]
+clean.Description = clean.Description.astype(str)
 final = clean.groupby(['Weekday','Subject']).sum()
 final['Notes'] = clean.groupby(['Weekday','Subject'])['Description'].apply(';'.join)
-print(final)
+final.to_excel('done.xlsx')
