@@ -25,6 +25,9 @@ def process_data(calendar_data):
     final = clean.groupby(['Start Date','Weekday','Subject']).sum()
     final['Notes'] = clean.groupby(['Start Date', 'Weekday','Subject'])['Description'].apply(';'.join)
     final.drop('Description', axis=1, inplace = True)
+    final.reset_index(inplace = True)
+    final['Start Date'] = pd.to_datetime(final['Start Date'])
+    final.sort_values('Start Date', inplace = True)
     return final
 
 
